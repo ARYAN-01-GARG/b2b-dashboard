@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { getLeads } from "./store";
 import type { Lead } from "./types";
+import GymDetailView from "./GymDetailView";
 
 // Lead type moved to ./types
 
@@ -176,10 +177,23 @@ function LeadManagement() {
     const navigate = useNavigate();
     const [data, setData] = useState<'active' | 'archived'>('active');
     const [userLeads, setUserLeads] = useState<Lead[]>([]);
+    const [selectedLead, setSelectedLead] = useState<Lead | null>(null);
+    const [showDetailDialog, setShowDetailDialog] = useState(false);
 
     useEffect(() => {
       setUserLeads(getLeads());
     }, []);
+
+    const handleGymNameClick = (lead: Lead) => {
+        setSelectedLead(lead);
+        setShowDetailDialog(true);
+    };
+
+    const handleArchiveLead = () => {
+        console.log('Archive lead:', selectedLead?.id);
+        setShowDetailDialog(false);
+        setSelectedLead(null);
+    };
   return (
     <div className="flex-1 overflow-auto">
         <h1 className="p-4 bg-secondary text-muted-foreground w-full font-semibold text-3xl">Lead Management</h1>
@@ -295,13 +309,12 @@ function LeadManagement() {
                                 {[...userLeads, ...mockLeads].map((lead) => (
                                     <tr key={lead.id} className="border-b border-gray-100 hover:bg-gray-50 transition-colors">
                                         <td className="py-4 px-4">
-                                            <a
-                                                href="#"
+                                            <button
+                                                onClick={() => handleGymNameClick(lead)}
                                                 className="text-blue-600 hover:text-blue-800 underline font-medium"
-                                                onClick={(e) => e.preventDefault()}
                                             >
                                                 {lead.gymName}
-                                            </a>
+                                            </button>
                                         </td>
                                         <td className="py-4 px-4 text-gray-700">{lead.city}</td>
                                         <td className="py-4 px-4 text-gray-700">{lead.country}</td>
@@ -328,6 +341,21 @@ function LeadManagement() {
                     </div>
                 </div>
             </div>
+
+            {/* Gym Detail Dialog */}
+            {showDetailDialog && selectedLead && (
+                <GymDetailView
+                    isOpen={showDetailDialog}
+                    onClose={() => setShowDetailDialog(false)}
+                    gymName={selectedLead.gymName}
+                    ownerName="Deepak Singh"
+                    email="Deepakingh@gmail.com"
+                    phoneNumber="9198205182"
+                    lastLogin="10 July 2024"
+                    staffCount="10"
+                    onArchiveLead={handleArchiveLead}
+                />
+            )}
          </div>
     </div>
   )
