@@ -1,81 +1,15 @@
 import BiLineCard from "@/domain/graphs/BiLineCard"
-import { ChevronDown, Search } from "lucide-react"
+import { ChevronDown } from "lucide-react"
 import { useState } from "react";
 import { mockTickets, mockDataDeletionRequests, mockChatMessages, type Ticket, type ChatMessage } from "./data";
 import SupportChat from "./SupportChat";
 import DeleteTicket from "./DeleteTicket";
+import Badge from "@/components/ui/Badge";
+import SearchBar from "@/components/ui/search-bar";
+import FilterDropdown from "@/components/ui/filter-dropdown";
+import TabNavigation from "@/components/ui/tab-navigation";
+import Pagination from "@/components/ui/pagination";
 
-
-const IssueTypeBadge = ({ type }: { type: string }) => {
-  const getTypeColor = (type: string) => {
-    switch (type) {
-      case 'Billing':
-        return 'bg-[#FEF3C7] text-[#D0AC1F]';
-      case 'Technical':
-        return 'bg-[#DBEAFE] text-[#418AEC]';
-      case 'Biometric':
-        return 'bg-[#CCFBF1] text-[#08BA94]';
-      case 'Login':
-        return 'bg-[#EDE9FE] text-[#8B5CF6]';
-      case 'Refund Gym':
-        return 'bg-[#E0F2FE] text-[#0891B2]';
-      default:
-        return 'bg-gray-200 text-gray-800';
-    }
-  };
-
-  return (
-    <span className={`px-3 py-1 rounded-full text-sm font-medium ${getTypeColor(type)}`}>
-      {type}
-    </span>
-  );
-};
-
-const StatusBadge = ({ status }: { status: string }) => {
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case 'Open':
-        return 'bg-[#EDE9FE] text-[#8B5CF6]';
-      case 'In Progress':
-        return 'bg-[#FEF3C7] text-[#D0AC1F]';
-      case 'Resolved':
-        return 'bg-[#CCFBF1] text-[#08BA94]';
-      case 'Verified':
-        return 'bg-[#DBEAFE] text-[#418AEC]';
-      case 'Completed':
-        return 'bg-[#CCFBF1] text-[#08BA94]';
-      case 'Denied':
-        return 'bg-[#FEE2E2] text-[#DC2626]';
-      default:
-        return 'bg-gray-200 text-gray-800';
-    }
-  };
-
-  return (
-    <span className={`px-3 py-1 rounded-full text-sm font-medium ${getStatusColor(status)}`}>
-      {status}
-    </span>
-  );
-};
-
-const TypeBadge = ({ type }: { type: string }) => {
-  const getTypeColor = (type: string) => {
-    switch (type) {
-      case 'Delete':
-        return 'bg-[#FEE2E2] text-[#DC2626]';
-      case 'Disable':
-        return 'bg-[#FEF3C7] text-[#D0AC1F]';
-      default:
-        return 'bg-gray-200 text-gray-800';
-    }
-  };
-
-  return (
-    <span className={`px-3 py-1 rounded-full text-sm font-medium ${getTypeColor(type)}`}>
-      {type}
-    </span>
-  );
-};
 
 const ticketHeaders = [
   "Ticket ID",
@@ -185,44 +119,25 @@ function SupportManagement() {
                 <div className="bg-primary px-6 py-8">
                     <div className="w-full flex justify-between items-center text-2xl font-semibold mb-12">
                     <span className="">Manage & Assign Support Tickets</span>
-                    <span className="text-lg">
-                        <span className={`${
-                            data === 'active' ? "text-green-500 border-b-2 border-green-500" : ""
-                        } border-b-1 px-2 cursor-pointer`}
-                            onClick={() => setData('active')}
-                        >
-                            Active
-                        </span>
-                        <span
-                            className={`${data === 'archived' ? "text-green-600 border-b-2 border-green-600" : ""} border-b-1 px-2 cursor-pointer`}
-                            onClick={() => setData('archived')}
-                        >
-                                Archived
-                        </span>
-                    </span>
+                    <TabNavigation
+                        activeTab={data}
+                        onTabChange={(tab) => setData(tab as 'active' | 'archived')}
+                        tabs={[
+                            { key: 'active', label: 'Active' },
+                            { key: 'archived', label: 'Archived' }
+                        ]}
+                    />
                     </div>
                     <div className="flex items-center gap-4">
                         {/* Search Bar */}
-                        <div className="border-3 border-[#A0A0A042] px-4 py-2 rounded-md w-full flex items-center gap-2">
-                        <Search className="w-6 h-6 text-black/40" />
-                        <input type="text" placeholder="Search..." className="outline-none p-2 font-medium" />
-                        </div>
+                        <SearchBar placeholder="Search..." className="w-full" />
                     </div>
 
                     {/* Filters */}
                     <div className="flex justify-start gap-10 mt-8 w-full">
-                    <div className="border-2 shadow border-[#A0A0A042] p-4 flex text-muted-foreground rounded-lg cursor-pointer items-center justify-between w-[15%]">
-                        <p>Status</p>
-                        <ChevronDown className="w-6 h-6" />
-                    </div>
-                    <div className="border-2 shadow border-[#A0A0A042] p-4 flex text-muted-foreground rounded-lg cursor-pointer items-center justify-between w-[15%]">
-                        <p>Source</p>
-                        <ChevronDown className="w-6 h-6" />
-                    </div>
-                    <div className="border-2 shadow border-[#A0A0A042] p-4 flex text-muted-foreground rounded-lg cursor-pointer items-center justify-between min-w-[15%]">
-                        <p>Last Update : 1 June 2025 - 1 July 2025</p>
-                        <ChevronDown className="w-6 h-6" />
-                    </div>
+                    <FilterDropdown label="Status" />
+                    <FilterDropdown label="Source" />
+                    <FilterDropdown label="Last Update : 1 June 2025 - 1 July 2025" className="min-w-[15%]" />
                     </div>
 
                     {/* Tickets Table */}
@@ -249,14 +164,14 @@ function SupportManagement() {
                                              </button>
                                          </td>
                                         <td className="py-4 px-4">
-                                            <IssueTypeBadge type={ticket.issueType} />
+                                            <Badge label={ticket.issueType} />
                                         </td>
                                         <td className="py-4 px-4 text-gray-700 flex items-center gap-2">
                                             {ticket.assignedTo}
                                             <ChevronDown className="w-4 h-4" />
                                         </td>
                                         <td className="py-4 px-4">
-                                            <StatusBadge status={ticket.status} />
+                                            <Badge label={ticket.status} variant="ticketStatus" />
                                         </td>
                                         <td className="py-4 px-4 text-gray-700">{ticket.lastUpdated}</td>
                                     </tr>
@@ -266,49 +181,34 @@ function SupportManagement() {
                     </div>
 
                     {/* Pagination */}
-                    <div className="flex justify-between items-center mt-4">
-                        <span className="text-gray-600">Showing 1 to 10 of 68 entries</span>
-                        <div className="flex space-x-2">
-                            <button className="px-3 py-1 border border-gray-300 rounded hover:bg-gray-50">&lt;</button>
-                            <button className="px-3 py-1 bg-green-500 text-white rounded">1</button>
-                            <button className="px-3 py-1 border border-gray-300 rounded hover:bg-gray-50">2</button>
-                            <button className="px-3 py-1 border border-gray-300 rounded hover:bg-gray-50">3</button>
-                            <span className="px-3 py-1">...</span>
-                            <button className="px-3 py-1 border border-gray-300 rounded hover:bg-gray-50">10</button>
-                            <button className="px-3 py-1 border border-gray-300 rounded hover:bg-gray-50">&gt;</button>
-                        </div>
-                    </div>
+                    <Pagination 
+                        currentPage={currentPage}
+                        totalPages={Math.ceil(mockTickets.length / itemsPerPage)}
+                        onPageChange={() => {}} // Add state management for page changes
+                        itemsPerPage={itemsPerPage}
+                        totalItems={mockTickets.length}
+                    />
                 </div>
 
                 <div className="bg-primary px-6 py-8 mt-12">
                    <div className="w-full flex justify-between items-center text-2xl font-semibold mb-12">
                     <span className="">Data Deletion Requests</span>
-                    <span className="text-lg">
-                        <span className={`${
-                            data === 'active' ? "text-green-500 border-b-2 border-green-500" : ""
-                        } border-b-1 px-2 cursor-pointer`}
-                            onClick={() => setData('active')}
-                        >
-                            Active
-                        </span>
-                        <span
-                            className={`${data === 'archived' ? "text-green-600 border-b-2 border-green-600" : ""} border-b-1 px-2 cursor-pointer`}
-                            onClick={() => setData('archived')}
-                        >
-                                Archived
-                        </span>
-                    </span>
+                    <TabNavigation 
+                        activeTab={data}
+                        onTabChange={(tab) => setData(tab as 'active' | 'archived')}
+                        tabs={[
+                            { key: 'active', label: 'Active' },
+                            { key: 'archived', label: 'Archived' }
+                        ]}
+                    />
                     </div>
                     <div className="flex items-center gap-4">
                         {/* Search Bar */}
-                        <div className="max-w-[70%] border-3 border-[#A0A0A042] px-4 py-2 rounded-md w-full flex items-center gap-2">
-                        <Search className="w-6 h-6 text-black/40" />
-                        <input type="text" placeholder="Search..." className="outline-none p-2 font-medium" />
-                        </div>
-                        <div className="flex-1 border-2 shadow border-[#A0A0A042] p-4 flex text-muted-foreground rounded-lg cursor-pointer items-center justify-between min-w-[15%]">
-                            <p>Last Update : 1 June 2025 - 1 July 2025</p>
-                            <ChevronDown className="w-6 h-6" />
-                        </div>
+                        <SearchBar placeholder="Search..." className="max-w-[70%] w-full" />
+                        <FilterDropdown 
+                            label="Last Update : 1 June 2025 - 1 July 2025" 
+                            className="flex-1 min-w-[15%]"
+                        />
                     </div>
                     {/* Data Deletion Table */}
                     <div className="overflow-x-auto border-2 border-[#A0A0A042] rounded-2xl mt-8">
@@ -336,10 +236,10 @@ function SupportManagement() {
                                         <td className="py-4 px-4 text-gray-700">{request.userEmail}</td>
                                         <td className="py-4 px-4 text-gray-700">{request.entity}</td>
                                         <td className="py-4 px-4">
-                                            <TypeBadge type={request.type} />
+                                            <Badge label={request.type} />
                                         </td>
                                         <td className="py-4 px-4">
-                                            <StatusBadge status={request.status} />
+                                            <Badge label={request.status} variant="ticketStatus" />
                                         </td>
                                     </tr>
                                 ))}
@@ -348,18 +248,13 @@ function SupportManagement() {
                     </div>
 
                     {/* Pagination */}
-                    <div className="flex justify-between items-center mt-4">
-                        <span className="text-gray-600">Showing 1 to 10 of 68 entries</span>
-                        <div className="flex space-x-2">
-                            <button className="px-3 py-1 border border-gray-300 rounded hover:bg-gray-50">&lt;</button>
-                            <button className="px-3 py-1 bg-green-500 text-white rounded">1</button>
-                            <button className="px-3 py-1 border border-gray-300 rounded hover:bg-gray-50">2</button>
-                            <button className="px-3 py-1 border border-gray-300 rounded hover:bg-gray-50">3</button>
-                            <span className="px-3 py-1">...</span>
-                            <button className="px-3 py-1 border border-gray-300 rounded hover:bg-gray-50">10</button>
-                            <button className="px-3 py-1 border border-gray-300 rounded hover:bg-gray-50">&gt;</button>
-                        </div>
-                    </div>
+                    <Pagination 
+                        currentPage={currentPage}
+                        totalPages={Math.ceil(mockDataDeletionRequests.length / itemsPerPage)}
+                        onPageChange={() => {}} // Add state management for page changes
+                        itemsPerPage={itemsPerPage}
+                        totalItems={mockDataDeletionRequests.length}
+                    />
                 </div>
 
                  {/* Support Chat Dialog */}

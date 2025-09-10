@@ -37,7 +37,7 @@ function MemberAndRevenue() {
                     <div className="">
                         <div className="mt-2 grid grid-cols-1 lg:grid-cols-2 gap-6">
                             <div className="bg-primary p-10">
-                                <LineCard
+                                <LineCard   
                                     title="Revenue"
                                     yLabel="Revenue ($)"
                                     data={[

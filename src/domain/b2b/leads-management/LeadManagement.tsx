@@ -6,172 +6,8 @@ import { useNavigate } from "react-router-dom";
 import { getLeads } from "./store";
 import type { Lead } from "./types";
 import GymDetailView from "./GymDetailView";
-
-// Lead type moved to ./types
-
-const mockLeads: Lead[] = [
-  {
-    id: 1,
-    gymName: "Mars Gym",
-    city: "Delhi",
-    country: "India",
-    signUpDate: "26 July 2025",
-    assignedSalesExecutive: "Satish Kumar",
-    leadStatus: "In Negotiation",
-    leadSource: "Website"
-  },
-  {
-    id: 2,
-    gymName: "Mars Gym",
-    city: "Delhi",
-    country: "India",
-    signUpDate: "26 July 2025",
-    assignedSalesExecutive: "Satish Kumar",
-    leadStatus: "Contacted",
-    leadSource: "Referral"
-  },
-  {
-    id: 3,
-    gymName: "Mars Gym",
-    city: "Delhi",
-    country: "India",
-    signUpDate: "26 July 2025",
-    assignedSalesExecutive: "Satish Kumar",
-    leadStatus: "Won",
-    leadSource: "Cold Call"
-  },
-  {
-    id: 4,
-    gymName: "Mars Gym",
-    city: "Delhi",
-    country: "India",
-    signUpDate: "26 July 2025",
-    assignedSalesExecutive: "Satish Kumar",
-    leadStatus: "New",
-    leadSource: "Ad Campaign"
-  },
-  {
-    id: 5,
-    gymName: "Mars Gym",
-    city: "Delhi",
-    country: "India",
-    signUpDate: "26 July 2025",
-    assignedSalesExecutive: "Satish Kumar",
-    leadStatus: "Lost",
-    leadSource: "Website"
-  },
-  {
-    id: 6,
-    gymName: "Mars Gym",
-    city: "Delhi",
-    country: "India",
-    signUpDate: "26 July 2025",
-    assignedSalesExecutive: "Satish Kumar",
-    leadStatus: "In Negotiation",
-    leadSource: "Referral"
-  },
-  {
-    id: 7,
-    gymName: "Mars Gym",
-    city: "Delhi",
-    country: "India",
-    signUpDate: "26 July 2025",
-    assignedSalesExecutive: "Satish Kumar",
-    leadStatus: "Contacted",
-    leadSource: "Cold Call"
-  },
-  {
-    id: 8,
-    gymName: "Mars Gym",
-    city: "Delhi",
-    country: "India",
-    signUpDate: "26 July 2025",
-    assignedSalesExecutive: "Satish Kumar",
-    leadStatus: "Won",
-    leadSource: "Ad Campaign"
-  },
-  {
-    id: 9,
-    gymName: "Mars Gym",
-    city: "Delhi",
-    country: "India",
-    signUpDate: "26 July 2025",
-    assignedSalesExecutive: "Satish Kumar",
-    leadStatus: "New",
-    leadSource: "Cold Call"
-  },
-  {
-    id: 10,
-    gymName: "Mars Gym",
-    city: "Delhi",
-    country: "India",
-    signUpDate: "26 July 2025",
-    assignedSalesExecutive: "Satish Kumar",
-    leadStatus: "Lost",
-    leadSource: "Ad Campaign"
-  }
-];
-
-// Status badge component
-const StatusBadge = ({ status }: { status: Lead['leadStatus'] }) => {
-  const getStatusColor = (status: Lead['leadStatus']) => {
-    switch (status) {
-      case 'In Negotiation':
-        return 'bg-yellow-100 text-yellow-800';
-      case 'Contacted':
-        return 'bg-blue-100 text-blue-800';
-      case 'Won':
-        return 'bg-green-100 text-green-800';
-      case 'New':
-        return 'bg-purple-100 text-purple-800';
-      case 'Lost':
-        return 'bg-red-100 text-red-800';
-      default:
-        return 'bg-gray-100 text-gray-800';
-    }
-  };
-
-  return (
-    <span className={`px-3 py-1 rounded-full text-sm font-medium ${getStatusColor(status)}`}>
-      {status}
-    </span>
-  );
-};
-
-// Source badge component
-const SourceBadge = ({ source }: { source: Lead['leadSource'] }) => {
-  const getSourceColor = (source: Lead['leadSource']) => {
-    switch (source) {
-      case 'Website':
-        return 'bg-green-100 text-green-800';
-      case 'Referral':
-        return 'bg-purple-100 text-purple-800';
-      case 'Cold Call':
-        return 'bg-blue-100 text-blue-800';
-      case 'Ad Campaign':
-        return 'bg-yellow-100 text-yellow-800';
-      default:
-        return 'bg-gray-100 text-gray-800';
-    }
-  };
-
-  return (
-    <span className={`px-3 py-1 rounded-full text-sm font-medium ${getSourceColor(source)}`}>
-      {source}
-    </span>
-  );
-};
-
-const tableHeaders = [
-  "Gym Name",
-  "City",
-  "Country",
-  "Manually Added/Demo Sign Up Date",
-  "Assigned Sales Executive",
-  "Lead Status",
-  "Lead Source",
-  "Action"
-];
+import Badge from "@/components/ui/Badge";
+import { mockLeads, tableHeaders } from "./data";
 
 function LeadManagement() {
     const navigate = useNavigate();
@@ -320,12 +156,12 @@ function LeadManagement() {
                                         <td className="py-4 px-4 text-gray-700">{lead.country}</td>
                                         <td className="py-4 px-4 text-gray-700">{lead.signUpDate}</td>
                                         <td className="py-4 px-4 text-gray-700">{lead.assignedSalesExecutive}</td>
-                                        <td className="py-4 px-4">
-                                            <StatusBadge status={lead.leadStatus} />
-                                        </td>
-                                        <td className="py-4 px-4">
-                                            <SourceBadge source={lead.leadSource} />
-                                        </td>
+                    <td className="py-4 px-4">
+                      <Badge label={lead.leadStatus} variant="leadStatus" />
+                    </td>
+                    <td className="py-4 px-4">
+                      <Badge label={lead.leadSource} variant="leadSource" />
+                    </td>
                                         <td className="py-4 px-4">
                                             <button
                                                 className="p-2 hover:bg-gray-100 rounded-md transition-colors"
