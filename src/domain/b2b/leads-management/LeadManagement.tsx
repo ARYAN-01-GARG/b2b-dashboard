@@ -7,7 +7,8 @@ import { getLeads } from "./store";
 import type { Lead } from "./types";
 import GymDetailView from "./GymDetailView";
 import Badge from "@/components/ui/Badge";
-import { mockLeads, tableHeaders } from "./data";
+import { mockLeads } from "./data";
+import { TABLE_HEADERS } from "@/constants";
 
 function LeadManagement() {
     const navigate = useNavigate();
@@ -134,7 +135,7 @@ function LeadManagement() {
                         <table className="w-full bg-white ">
                             <thead>
                                 <tr className="border-b border-[#A0A0A042] rounded-2xl font-semibold text-gray-700">
-                                    {tableHeaders.map((header) => (
+                                    {TABLE_HEADERS.leads.map((header) => (
                                         <th key={header} className="text-left py-4 px-4 ">
                                             {header}
                                         </th>
